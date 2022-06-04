@@ -12,6 +12,19 @@ import (
 	jpegstructure "github.com/dsoprea/go-jpeg-image-structure"
 )
 
+// Open creates a new Image struct, initializes the EXIF data, and returns the struct Image
+func Open(path string) (*Image, error) {
+	image := Image{
+		filepath: path,
+	}
+	err := image.initExif()
+	if err != nil {
+		return nil, err
+	}
+
+	return &image, nil
+}
+
 type ExifError struct {
 	text string
 	Err  error
@@ -30,19 +43,6 @@ type Image struct {
 	ifd0Ib   *exif.IfdBuilder
 	rootIb   *exif.IfdBuilder
 	sl       *jpegstructure.SegmentList
-}
-
-// New creates a new Image struct, initializes the EXIF data, and returns the struct Image
-func Open(path string) (*Image, error) {
-	image := Image{
-		filepath: path,
-	}
-	err := image.initExif()
-	if err != nil {
-		return nil, err
-	}
-
-	return &image, nil
 }
 
 func (f *Image) initExif() error {

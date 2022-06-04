@@ -1,3 +1,5 @@
+[![Go Reference](https://pkg.go.dev/badge/github.com/Gasoid/simpleGoExif.svg)](https://pkg.go.dev/github.com/Gasoid/simpleGoExif)
+
 # Simple Go Exif
 You can implement this github.com/dsoprea/go-exif/v2 in your code and feel pure pain.
 Otherwise you can use my library. I've simplified it.
