@@ -13,7 +13,7 @@ import (
 )
 
 func main() {
-    image, err := exif.New("image.jpg")
+    image, err := exif.Open("image.jpg")
     if err != nil {
         fmt.Println("err:", err.Error())
     }
