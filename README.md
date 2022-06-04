@@ -17,10 +17,10 @@ func main() {
     if err != nil {
         fmt.Println("err:", err.Error())
     }
+    defer image.Close()
     image.SetDescription("text")
     image.SetTime(time.Now())
     image.SetGPS(float64(52.5219814), float64(13.4111173))
-    image.Close()
 }
 
 ```
