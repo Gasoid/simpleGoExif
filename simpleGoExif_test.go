@@ -11,7 +11,7 @@ const (
 	img = "naruto.jpg"
 )
 
-func TestNew(t *testing.T) {
+func TestOpen(t *testing.T) {
 	var e *ExifError
 	tests := []struct {
 		name string
@@ -31,7 +31,7 @@ func TestNew(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			_, err := New(tt.arg)
+			_, err := Open(tt.arg)
 			if err == nil {
 				assert.Equal(t, tt.want, err)
 			} else {
@@ -54,7 +54,7 @@ func TestSetDescription(t *testing.T) {
 			want: nil,
 		},
 	}
-	image, _ := New(img)
+	image, _ := Open(img)
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			err := image.SetDescription(tt.arg)
@@ -80,7 +80,7 @@ func TestSetTime(t *testing.T) {
 			want: nil,
 		},
 	}
-	image, _ := New(img)
+	image, _ := Open(img)
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			err := image.SetTime(tt.arg)

@@ -33,7 +33,7 @@ type Image struct {
 }
 
 // New creates a new Image struct, initializes the EXIF data, and returns the struct Image
-func New(path string) (*Image, error) {
+func Open(path string) (*Image, error) {
 	image := Image{
 		filepath: path,
 	}
