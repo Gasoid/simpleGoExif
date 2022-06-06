@@ -10,6 +10,7 @@ Please check out following:
 package main
 
 import (
+    "fmt"
     "time"
     exif "github.com/Gasoid/simpleGoExif"
 )

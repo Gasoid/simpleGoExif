@@ -3,13 +3,15 @@ package simpleGoExif
 import (
 	"bytes"
 	"io/ioutil"
-	"time"
-
-	"github.com/Gasoid/go-dms/dms"
 
 	exif "github.com/dsoprea/go-exif/v2"
 	exifcommon "github.com/dsoprea/go-exif/v2/common"
 	jpegstructure "github.com/dsoprea/go-jpeg-image-structure"
+)
+
+const (
+	ImageDescriptionTag = "ImageDescription"
+	DateTimeTag         = "DateTime"
 )
 
 // Open creates a new Image struct, initializes the EXIF data, and returns the struct Image
@@ -74,61 +76,6 @@ func (f *Image) initExif() error {
 // GetRootIb is a getter for the rootIb.
 func (f *Image) GetRootIb() *exif.IfdBuilder {
 	return f.rootIb
-}
-
-// SetDescription sets the description of the image.
-func (f *Image) SetDescription(description string) error {
-	err := f.ifd0Ib.SetStandardWithName("ImageDescription", description)
-	if err != nil {
-		return &ExifError{"ifd0Ib.SetStandardWithName failed", err}
-	}
-	return nil
-}
-
-// SetTime sets the time of the image.
-func (f *Image) SetTime(date time.Time) error {
-	dateTime := exif.ExifFullTimestampString(date)
-	err := f.ifd0Ib.SetStandardWithName("DateTime", dateTime)
-	if err != nil {
-		return &ExifError{"ifd0Ib.SetStandardWithName failed", err}
-	}
-	return nil
-}
-
-// SetGPS sets the GPS coordinates of the image.
-func (f *Image) SetGPS(latitude, longitude float64) error {
-	if latitude == 0 || longitude == 0 {
-		return nil
-	}
-	childIb, err := exif.GetOrCreateIbFromRootIb(f.rootIb, "IFD/GPSInfo")
-	if err != nil {
-		return &ExifError{"exif.GetOrCreateIbFromRootIb failed", err}
-	}
-	lat, lon, err := dms.NewDMS(latitude, longitude)
-	if err != nil {
-		return &ExifError{"dms.NewDMS", err}
-	}
-	updatedGiLat := exif.GpsDegrees{
-		Degrees: float64(lat.Degrees),
-		Minutes: float64(lat.Minutes),
-		Seconds: lat.Seconds,
-	}
-
-	err = childIb.SetStandardWithName("GPSLatitude", updatedGiLat.Raw())
-	if err != nil {
-		return &ExifError{"childIb.SetStandardWithName failed", err}
-	}
-	updatedGiLong := exif.GpsDegrees{
-		Degrees: float64(lon.Degrees),
-		Minutes: float64(lon.Minutes),
-		Seconds: lon.Seconds,
-	}
-
-	err = childIb.SetStandardWithName("GPSLongitude", updatedGiLong.Raw())
-	if err != nil {
-		return &ExifError{"childIb.SetStandardWithName", err}
-	}
-	return nil
 }
 
 // Close writes the EXIF data to the file.
