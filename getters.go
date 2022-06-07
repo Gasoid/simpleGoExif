@@ -6,13 +6,14 @@ import (
 	exif "github.com/dsoprea/go-exif/v2"
 )
 
-// GetDescription returns the description of the image.
-func (f *Image) GetDescription() string {
+// GetTagValueString returns the value of tag.
+// the method works only for string value
+func (f *Image) GetTagValueString(tag string) string {
 	rootIfd, _, err := f.sl.Exif()
 	if err != nil {
 		return ""
 	}
-	results, err := rootIfd.FindTagWithName(ImageDescriptionTag)
+	results, err := rootIfd.FindTagWithName(tag)
 	if err != nil {
 		return ""
 	}
@@ -26,24 +27,17 @@ func (f *Image) GetDescription() string {
 	return valueRaw.(string)
 }
 
+// GetDescription returns the description of the image.
+func (f *Image) GetDescription() string {
+	return f.GetTagValueString(ImageDescriptionTag)
+}
+
 // GetTime returns the time of the image.
 func (f *Image) GetTime() time.Time {
-	rootIfd, _, err := f.sl.Exif()
-	if err != nil {
+	datetime := f.GetTagValueString(DateTimeTag)
+	if datetime == "" {
 		return time.Time{}
 	}
-	results, err := rootIfd.FindTagWithName(DateTimeTag)
-	if err != nil {
-		return time.Time{}
-	}
-	if len(results) == 0 {
-		return time.Time{}
-	}
-	valueRaw, err := results[0].Value()
-	if err != nil {
-		return time.Time{}
-	}
-	datetime := valueRaw.(string)
 	timestamp, err := exif.ParseExifFullTimestamp(datetime)
 	if err != nil {
 		return time.Time{}

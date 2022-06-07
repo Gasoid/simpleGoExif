@@ -7,11 +7,21 @@ import (
 	exif "github.com/dsoprea/go-exif/v2"
 )
 
-// SetDescription sets the description of the image.
-func (f *Image) SetDescription(description string) error {
-	err := f.ifd0Ib.SetStandardWithName(ImageDescriptionTag, description)
+// SetTagValueString sets the value of the given tag.
+// the method sets string value for tag
+func (f *Image) SetTagValueString(tag, val string) error {
+	err := f.ifd0Ib.SetStandardWithName(tag, val)
 	if err != nil {
 		return &ExifError{"ifd0Ib.SetStandardWithName failed", err}
+	}
+	return nil
+}
+
+// SetDescription sets the description of the image.
+func (f *Image) SetDescription(description string) error {
+	err := f.SetTagValueString(ImageDescriptionTag, description)
+	if err != nil {
+		return &ExifError{"f.SetTagValueString failed", err}
 	}
 	return nil
 }
@@ -19,9 +29,9 @@ func (f *Image) SetDescription(description string) error {
 // SetTime sets the time of the image.
 func (f *Image) SetTime(date time.Time) error {
 	dateTime := exif.ExifFullTimestampString(date)
-	err := f.ifd0Ib.SetStandardWithName(DateTimeTag, dateTime)
+	err := f.SetTagValueString(DateTimeTag, dateTime)
 	if err != nil {
-		return &ExifError{"ifd0Ib.SetStandardWithName failed", err}
+		return &ExifError{"f.SetTagValueString failed", err}
 	}
 	return nil
 }

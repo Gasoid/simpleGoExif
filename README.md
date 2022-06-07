@@ -27,3 +27,7 @@ func main() {
 }
 
 ```
+
+## Links
+- exif tags https://exiftool.org/TagNames/EXIF.html
+- pure pain github.com/dsoprea/go-exif
